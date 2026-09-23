@@ -462,6 +462,7 @@
         <img class="cab-logo" src="logo.png" alt="" onerror="this.remove()">
         <div class="cab-textos">
           <h1 class="cab-titulo">Procedimentos de Trabalho</h1>
+          <div class="cab-subtitulo" id="ultimaAtualizacaoCatalogo">Carregando…</div>
           <div class="cab-subtitulo" id="apiStatus"></div>
         </div>
         <div class="cab-acoes">
@@ -487,7 +488,7 @@
       <button class="cab-btn" onclick="backToCatalog()" title="Voltar ao catálogo"><i class="bi bi-arrow-left"></i><span>Catálogo</span></button>
       <div class="cab-textos">
         <h1 class="cab-titulo">Procedimento de Trabalho</h1>
-        <div class="cab-subtitulo">Clique em qualquer texto para editar · clique nas fotos para carregar imagem, arraste para reposicionar e use o controle de zoom · use “+” para adicionar e “×” para remover linhas/passos.</div>
+        <div class="cab-subtitulo" id="ultimaAtualizacaoEditor"></div>
         <div class="cab-subtitulo" id="saveStatus"></div>
       </div>
       <div class="cab-acoes">
@@ -762,12 +763,18 @@
 
   /* --------------------------- CATÁLOGO --------------------------- */
 
+  function marcarAtualizacao(id){
+    const el = document.getElementById(id);
+    if(el) el.textContent = 'Atualizado em ' + new Date().toLocaleString('pt-BR');
+  }
+
   async function loadCatalog(){
     const msg = document.getElementById('catalogMsg');
     const tbody = document.getElementById('catalogTbody');
     const apiStatus = document.getElementById('apiStatus');
     if(!apiConfigured()){
       apiStatus.textContent = 'backend não configurado';
+      document.getElementById('ultimaAtualizacaoCatalogo').textContent = '';
       msg.innerHTML = 'Configure a constante <code>API_URL</code> no início do script (veja backend.gs) para habilitar o catálogo e o salvamento. Enquanto isso, "+ Novo procedimento" ainda funciona para editar e imprimir.';
       tbody.innerHTML = '';
       return;
@@ -777,6 +784,7 @@
     try{
       const res = await apiGet('listProcedures');
       if(res.error) throw new Error(res.error);
+      marcarAtualizacao('ultimaAtualizacaoCatalogo');
       tbody.innerHTML = '';
       if(!res.procedimentos.length){
         msg.textContent = 'Nenhum procedimento salvo ainda.';
@@ -806,6 +814,7 @@
       });
     }catch(err){
       msg.textContent = 'Erro ao carregar catálogo: ' + err.message;
+      document.getElementById('ultimaAtualizacaoCatalogo').textContent = 'Falha ao carregar';
     }
   }
 
@@ -815,6 +824,7 @@
       if(res.error) throw new Error(res.error);
       renderDoc(res.conteudo);
       currentProcedure = { id: res.id, revisaoAtual: res.revisaoAtual };
+      marcarAtualizacao('ultimaAtualizacaoEditor');
       document.getElementById('saveStatus').textContent = '';
       showEditor();
     }catch(err){
@@ -836,6 +846,7 @@
     currentProcedure = { id: 'PROC-' + Date.now(), revisaoAtual: '00' };
     resetEditorToBlank();
     document.getElementById('saveStatus').textContent = 'Novo procedimento (ainda não salvo)';
+    document.getElementById('ultimaAtualizacaoEditor').textContent = '';
     showEditor();
   }
 
@@ -895,6 +906,7 @@
       renderDoc(res.conteudo);
       currentProcedure.revisaoAtual = res.revisao;
       document.getElementById('saveStatus').textContent = 'Versão ' + res.revisao + ' carregada (clique em Salvar para confirmar)';
+      marcarAtualizacao('ultimaAtualizacaoEditor');
       closeHistory();
     }catch(err){
       alert('Erro ao carregar versão: ' + err.message);
@@ -951,6 +963,7 @@
       currentProcedure.revisaoAtual = revisaoAtual;
       const hora = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
       status.textContent = 'Salvo às ' + hora;
+      marcarAtualizacao('ultimaAtualizacaoEditor');
     }catch(err){
       console.error(err);
       status.textContent = 'Erro ao salvar';
