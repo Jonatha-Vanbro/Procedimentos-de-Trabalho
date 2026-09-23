@@ -3,6 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <title>Procedimento de Trabalho — Modelo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  /* ===== CABEÇALHO PADRÃO (cabecalho-padrao.css) ===== */
+  .cab-padrao{background:#1e2a4a;color:#fff;padding:.9rem 0;font-family:'Inter',system-ui,sans-serif}
+  .cab-padrao .cab-conteudo{max-width:1320px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:1rem}
+  .cab-padrao .cab-logo{height:36px;background:#fff;border-radius:6px;padding:3px}
+  .cab-padrao .cab-textos{flex:1;min-width:0}
+  .cab-padrao .cab-titulo{font-size:1.15rem;font-weight:700;margin:0;line-height:1.3;color:#fff}
+  .cab-padrao .cab-subtitulo{font-size:.8rem;color:#b9c3dc}
+  .cab-padrao .cab-acoes{display:flex;gap:.5rem;flex-shrink:0}
+  .cab-padrao .cab-btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-width:32px;height:32px;padding:0 .55rem;border:1px solid rgba(255,255,255,.85);border-radius:6px;background:transparent;color:#fff;font:500 .8rem 'Inter',system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:background .15s,color .15s}
+  .cab-padrao .cab-btn:hover{background:#fff;color:#1e2a4a}
+  .cab-padrao .cab-btn:focus-visible{outline:2px solid #7dd3fc;outline-offset:2px}
+  .cab-padrao .cab-btn:disabled{opacity:.5;cursor:default}
+  @media (max-width:576px){.cab-padrao .cab-conteudo{padding:0 1rem}.cab-padrao .cab-titulo{font-size:1rem}.cab-padrao .cab-btn span{display:none}}
+  .cab-fixo{position:sticky;top:0;z-index:50}
+</style>
 <style>
   :root{
     --line:#000;
@@ -439,11 +457,18 @@
 
   <!-- ================= TELA: CATÁLOGO ================= -->
   <div class="catalog-screen" id="catalogScreen">
-    <div class="catalog-topbar no-print">
-      <strong>Procedimentos de Trabalho</strong>
-      <span class="api-status" id="apiStatus"></span>
-      <button class="cat-new-btn" onclick="startNewProcedure()">+ Novo procedimento</button>
-    </div>
+    <header class="cab-padrao cab-fixo no-print">
+      <div class="cab-conteudo">
+        <img class="cab-logo" src="logo.png" alt="" onerror="this.remove()">
+        <div class="cab-textos">
+          <h1 class="cab-titulo">Procedimentos de Trabalho</h1>
+          <div class="cab-subtitulo" id="apiStatus"></div>
+        </div>
+        <div class="cab-acoes">
+          <button class="cab-btn" onclick="startNewProcedure()" title="Novo procedimento"><i class="bi bi-plus-lg"></i><span>Novo procedimento</span></button>
+        </div>
+      </div>
+    </header>
     <div class="catalog-body">
       <div id="catalogMsg" class="catalog-msg"></div>
       <table class="catalog-table" id="catalogTable">
@@ -457,15 +482,21 @@
 
   <!-- ================= TELA: EDITOR ================= -->
   <div class="editor-screen" id="editorScreen" style="display:none">
-  <div class="toolbar no-print">
-    <button class="tb-back" onclick="backToCatalog()">← Catálogo</button>
-    <strong>Procedimento de Trabalho</strong>
-    <p>Clique em qualquer texto para editar · clique nas fotos para carregar imagem, arraste para reposicionar e use o controle de zoom · use “+” para adicionar e “×” para remover linhas/passos.</p>
-    <span class="save-status" id="saveStatus"></span>
-    <button class="tb-hist" onclick="openHistory()">🕘 Histórico</button>
-    <button class="tb-save" onclick="saveDoc()">💾 Salvar</button>
-    <button onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-  </div>
+  <header class="cab-padrao cab-fixo no-print">
+    <div class="cab-conteudo">
+      <button class="cab-btn" onclick="backToCatalog()" title="Voltar ao catálogo"><i class="bi bi-arrow-left"></i><span>Catálogo</span></button>
+      <div class="cab-textos">
+        <h1 class="cab-titulo">Procedimento de Trabalho</h1>
+        <div class="cab-subtitulo">Clique em qualquer texto para editar · clique nas fotos para carregar imagem, arraste para reposicionar e use o controle de zoom · use “+” para adicionar e “×” para remover linhas/passos.</div>
+        <div class="cab-subtitulo" id="saveStatus"></div>
+      </div>
+      <div class="cab-acoes">
+        <button class="cab-btn" onclick="openHistory()" title="Histórico de versões"><i class="bi bi-clock-history"></i><span>Histórico</span></button>
+        <button class="cab-btn tb-save" onclick="saveDoc()" title="Salvar"><i class="bi bi-floppy"></i><span>Salvar</span></button>
+        <button class="cab-btn" onclick="window.print()" title="Imprimir / Salvar PDF"><i class="bi bi-printer"></i><span>Imprimir</span></button>
+      </div>
+    </div>
+  </header>
 
 
   <div class="cover-page">
